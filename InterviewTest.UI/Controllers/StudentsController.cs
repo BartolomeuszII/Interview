@@ -1,4 +1,6 @@
-﻿using InterviewTestExercise.Domain.Interfaces.Services;
+﻿using InterviewTest.UI.Models;
+using InterviewTestExercise.Domain.Entities;
+using InterviewTestExercise.Domain.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -15,7 +17,20 @@ namespace InterviewTest.UI.Controllers
 
         public async Task<IActionResult> Index()
         {
-            return Ok(await _studentService.GetStudentsAsync());
+            return View("StudentsView", await _studentService.GetStudentsAsync());
+        }
+
+        public IActionResult AddGradeView(Student student)
+        {
+            var addGradeViewModel = new AddGradeViewModel();
+            addGradeViewModel.Student = student;
+            return View("AddGradeView", addGradeViewModel);
+        }
+
+        public async Task<IActionResult> AddGrade(int studentId, int grade)
+        {
+            await _studentService.AddGradeToStudent(studentId, grade);
+            return RedirectToAction("Index");
         }
     }
 }

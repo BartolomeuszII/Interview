@@ -18,10 +18,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Views\Students\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\InterviewTestExercise.Services\InterviewTestExercise.Services.csproj" />
   </ItemGroup>
 

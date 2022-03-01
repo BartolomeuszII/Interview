@@ -19,7 +19,31 @@ namespace InterviewTestExercise.Services
 
         public async Task<IEnumerable<Student>> GetStudentsAsync()
         {
-            return await _dbContext.Students.ToListAsync();
+            return await _dbContext.Students.Include(s => s.Grades).ToListAsync();
+        }
+
+        public async Task<double> GetStudentAverageGrade(Student student)
+        {
+            if(student.Grades == null)
+            {
+                student.Grades = await GetStudentGrades(student.IdStudent);
+            }
+
+            return student.Grades.Select(g => g.GivenGrade).Average();
+        }
+
+        public async Task AddGradeToStudent(int studentId, int grade)
+        {
+            var givenGrade = new Grade();
+            givenGrade.StudentId = studentId;
+            givenGrade.GivenGrade = grade;
+            await _dbContext.Grades.AddAsync(givenGrade);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task<List<Grade>> GetStudentGrades(int studentId)
+        {
+            return await _dbContext.Grades.Where(g => g.StudentId == studentId).ToListAsync();
         }
 
     }
